@@ -1,0 +1,81 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #faf7f2;
+  color: #2d2a26;
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+  font-size: 1.1em;
+}
+h1 { font-size: 1.45em; margin-bottom: 8px; }
+.intro {
+  background: #fff;
+  border: 1px solid #e7e0d5;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin: 18px 0 26px;
+}
+.item {
+  background: #fff;
+  border: 1px solid #e7e0d5;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.item.missing { border: 2px solid #c0392b; }
+.item-text { font-weight: 600; margin-bottom: 12px; }
+.item-num { color: #8a8378; font-weight: 400; margin-right: 6px; font-size: 0.9em; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+.options label {
+  display: block;
+  border: 1px solid #d8cfc0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  background: #f7f3ec;
+  font-size: 0.95em;
+}
+.options input { margin-right: 10px; transform: scale(1.3); vertical-align: middle; }
+.options label:has(input:checked) {
+  background: #2c6e49;
+  color: #fff;
+  border-color: #2c6e49;
+}
+.progress {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #2d2a26;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  font-size: 0.95em;
+}
+.btn {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 14px;
+}
+.btn-send { background: #2c6e49; color: #fff; }
+.btn-copy { background: #efe8db; color: #2d2a26; }
+.warning { color: #c0392b; font-weight: 600; display: none; margin-top: 14px; }
+.done-note { display: none; background: #e8f3ec; border-radius: 12px; padding: 16px; margin-top: 14px; }
+.card {
+  display: block;
+  background: #fff;
+  border: 1px solid #e7e0d5;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+  text-decoration: none;
+  color: inherit;
+}
+.card h2 { font-size: 1.15em; margin-bottom: 6px; color: #2c6e49; }
+.card p { font-size: 0.95em; color: #6b6459; }

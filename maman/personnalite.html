@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Comment tu me vois — Stéphane</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>2. Comment tu me vois aujourd'hui</h1>
+
+<div class="intro">
+  <p><b>Je vois Stéphane comme quelqu'un qui…</b></p>
+  <p style="margin-top:8px; font-size:0.92em">60 phrases courtes. Pour chacune, dis si tu es d'accord ou non — tel que tu le vois <b>aujourd'hui</b>, adulte. Réponds spontanément.</p>
+</div>
+
+<div id="items"></div>
+
+<p class="warning" id="warning">⚠ Il manque des réponses (encadrées en rouge un peu plus haut).</p>
+<button class="btn btn-send" onclick="send()">📧 Envoyer mes réponses à Stéphane</button>
+<button class="btn btn-copy" onclick="copyAnswers()">📋 Copier mes réponses (pour WhatsApp)</button>
+<div class="done-note" id="done-note">Réponses copiées ! Tu peux maintenant les coller dans WhatsApp et me les envoyer.</div>
+
+<div class="progress" id="progress">0 / 60 réponses</div>
+
+<script>
+const ITEMS = [
+"est sociable, extraverti","est compatissant, a un cœur tendre","a tendance à être désorganisé","est « relaxe », détendu, gère bien le stress","est peu intéressé par tout ce qui est artistique",
+"a une forte personnalité, s'exprime avec assurance","est respectueux, traite les autres avec respect","a tendance à être paresseux","reste optimiste après avoir subi un revers","s'intéresse à de nombreux sujets",
+"se sent rarement excité ou impatient","a tendance à critiquer les autres","est fiable, stable","est de mauvaise humeur, a des sautes d'humeur","est inventif, trouve des façons astucieuses de faire les choses",
+"a tendance à être silencieux","ressent peu de sympathie pour les autres","est organisé, aime garder les choses en ordre","peut être angoissé","est fasciné par l'art, la musique ou la littérature",
+"est dominant, agit comme un leader","commence facilement à se disputer avec les autres","a du mal à démarrer quand il faut se mettre au travail","se sent à l'aise, sûr de lui","évite les discussions intellectuelles et philosophiques",
+"est moins actif que les autres","est indulgent de nature","peut parfois être négligent","est quelqu'un de tempéré, pas facilement troublé","a peu de créativité",
+"est quelquefois timide, inhibé","est serviable et n'est pas égoïste avec les autres","garde les choses propres et bien rangées","se tourmente beaucoup","apprécie les activités artistiques et esthétiques",
+"trouve difficile d'influencer les gens","est parfois impoli avec les autres","est efficace, fait avancer les choses","se sent souvent triste","aime réfléchir et jouer avec les idées",
+"est plein d'énergie","se méfie des intentions des autres","est fiable, on peut toujours compter sur lui","garde ses émotions sous contrôle","a de la difficulté à imaginer des choses",
+"est bavard","est parfois dédaigneux, méprisant","laisse en désordre, ne range pas","se sent rarement anxieux ou effrayé","pense que la poésie et les pièces de théâtre sont ennuyeuses",
+"préfère que les autres prennent les choses en main","est poli, courtois envers les autres","persévère jusqu'à ce que sa tâche soit finie","est déprimé, cafardeux","s'intéresse peu aux idées abstraites",
+"montre beaucoup d'enthousiasme","pense que les autres sont fondamentalement bons","se comporte parfois de manière irresponsable","est capricieux, devient facilement émotif","est créatif, plein d'idées originales"
+];
+const SCALE = ["Pas du tout d'accord","Plutôt pas d'accord","Ni d'accord ni pas d'accord","Plutôt d'accord","Tout à fait d'accord"];
+const N = ITEMS.length;
+
+const container = document.getElementById('items');
+ITEMS.forEach((txt,idx)=>{
+  const n = idx+1;
+  const div = document.createElement('div');
+  div.className='item'; div.id='item-'+n;
+  const opts = SCALE.map((s,v)=>`<label><input type="radio" name="q${n}" value="${v+1}" onchange="updateProgress()">${s}</label>`).join('');
+  div.innerHTML = `<div class="item-text"><span class="item-num">${n}/${N}</span>… ${txt}</div><div class="options">${opts}</div>`;
+  container.appendChild(div);
+});
+
+function collect(){
+  const answers = [];
+  let firstMissing = null;
+  for(let n=1;n<=N;n++){
+    const sel = document.querySelector(`input[name="q${n}"]:checked`);
+    const el = document.getElementById('item-'+n);
+    if(!sel){ el.classList.add('missing'); if(!firstMissing) firstMissing = el; }
+    else { el.classList.remove('missing'); answers.push(sel.value); }
+  }
+  if(firstMissing){
+    document.getElementById('warning').style.display='block';
+    firstMissing.scrollIntoView({behavior:'smooth', block:'center'});
+    return null;
+  }
+  document.getElementById('warning').style.display='none';
+  return answers;
+}
+
+function answerText(answers){
+  return "Questionnaire 2 — Comment tu me vois (rempli par Maman)\n"
+    + "Date : " + new Date().toLocaleDateString('fr-FR') + "\n"
+    + "Réponses : " + answers.join(' ');
+}
+
+function send(){
+  const a = collect(); if(!a) return;
+  const subject = encodeURIComponent("Questionnaire 2 — comment je te vois");
+  const body = encodeURIComponent(answerText(a));
+  window.location.href = `mailto:st.chotard@gmail.com?subject=${subject}&body=${body}`;
+}
+
+function copyAnswers(){
+  const a = collect(); if(!a) return;
+  navigator.clipboard.writeText(answerText(a)).then(()=>{
+    document.getElementById('done-note').style.display='block';
+  });
+}
+
+function updateProgress(){
+  const c = document.querySelectorAll('input:checked').length;
+  document.getElementById('progress').textContent = `${c} / ${N} réponses`;
+}
+</script>
+
+</body>
+</html>

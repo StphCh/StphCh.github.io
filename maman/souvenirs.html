@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Souvenirs d'enfance — Stéphane</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>1. Souvenirs d'enfance</h1>
+
+<div class="intro">
+  <p><b>Enfant (avant ses 12 ans environ), Stéphane était (ou avait)&nbsp;:</b></p>
+  <p style="margin-top:8px; font-size:0.92em">Pour chaque point, choisis la réponse qui correspond le mieux à tes souvenirs. Réponds spontanément — tes premiers souvenirs sont les bons.</p>
+</div>
+
+<div id="items"></div>
+
+<p class="warning" id="warning">⚠ Il manque des réponses (encadrées en rouge un peu plus haut).</p>
+<button class="btn btn-send" onclick="send()">📧 Envoyer mes réponses à Stéphane</button>
+<button class="btn btn-copy" onclick="copyAnswers()">📋 Copier mes réponses (pour WhatsApp)</button>
+<div class="done-note" id="done-note">Réponses copiées ! Tu peux maintenant les coller dans WhatsApp et me les envoyer.</div>
+
+<div class="progress" id="progress">0 / 25 réponses</div>
+
+<script>
+const ITEMS = [
+"Des problèmes de concentration ; facilement distrait",
+"Anxieux, préoccupé",
+"Nerveux, agité",
+"Inattentif, rêveur (dans la lune)",
+"Impatient, la mèche courte",
+"Un tempérament explosif ; colérique",
+"Des difficultés à finir les tâches commencées, du mal à persévérer",
+"Entêté, déterminé",
+"Triste ou mélancolique, déprimé, malheureux",
+"Désobéissant avec ses parents, rebelle, effronté ou impoli",
+"Une faible estime de lui-même",
+"Irritable",
+"Des changements d'humeur selon les événements ; des hauts et des bas",
+"Fâché, enragé",
+"Tendance à agir sans réfléchir, impulsif",
+"Tendance à être immature",
+"Des sentiments de culpabilité, des regrets",
+"Des pertes de contrôle de lui-même",
+"Tendance à penser ou agir de manière irrationnelle",
+"Impopulaire auprès des autres enfants, du mal à garder des amis longtemps, du mal à s'entendre avec les autres enfants",
+"Des difficultés à voir les choses du point de vue des autres",
+"Des problèmes avec l'autorité, avec l'école ; des visites chez le directeur",
+"Dans l'ensemble un élève faible, lent à apprendre",
+"De la difficulté avec les mathématiques ou les chiffres",
+"Ne réussissait pas à son plein potentiel"
+];
+const SCALE = ["Pas du tout ou très légèrement","Légèrement","Modérément","Passablement","Beaucoup"];
+const N = ITEMS.length;
+
+const container = document.getElementById('items');
+ITEMS.forEach((txt,idx)=>{
+  const n = idx+1;
+  const div = document.createElement('div');
+  div.className='item'; div.id='item-'+n;
+  const opts = SCALE.map((s,v)=>`<label><input type="radio" name="q${n}" value="${v}" onchange="updateProgress()">${s}</label>`).join('');
+  div.innerHTML = `<div class="item-text"><span class="item-num">${n}/${N}</span>${txt}</div><div class="options">${opts}</div>`;
+  container.appendChild(div);
+});
+
+function collect(){
+  const answers = [];
+  let firstMissing = null;
+  for(let n=1;n<=N;n++){
+    const sel = document.querySelector(`input[name="q${n}"]:checked`);
+    const el = document.getElementById('item-'+n);
+    if(!sel){ el.classList.add('missing'); if(!firstMissing) firstMissing = el; }
+    else { el.classList.remove('missing'); answers.push(sel.value); }
+  }
+  if(firstMissing){
+    document.getElementById('warning').style.display='block';
+    firstMissing.scrollIntoView({behavior:'smooth', block:'center'});
+    return null;
+  }
+  document.getElementById('warning').style.display='none';
+  return answers;
+}
+
+function answerText(answers){
+  return "Questionnaire 1 — Souvenirs d'enfance (rempli par Maman)\n"
+    + "Date : " + new Date().toLocaleDateString('fr-FR') + "\n"
+    + "Réponses : " + answers.join(' ');
+}
+
+function send(){
+  const a = collect(); if(!a) return;
+  const subject = encodeURIComponent("Questionnaire 1 — souvenirs d'enfance");
+  const body = encodeURIComponent(answerText(a));
+  window.location.href = `mailto:st.chotard@gmail.com?subject=${subject}&body=${body}`;
+}
+
+function copyAnswers(){
+  const a = collect(); if(!a) return;
+  navigator.clipboard.writeText(answerText(a)).then(()=>{
+    document.getElementById('done-note').style.display='block';
+  });
+}
+
+function updateProgress(){
+  const c = document.querySelectorAll('input:checked').length;
+  document.getElementById('progress').textContent = `${c} / ${N} réponses`;
+}
+</script>
+
+</body>
+</html>
